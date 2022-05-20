@@ -35,7 +35,7 @@ def menu():
             print_bye()
             break
         else:
-            there_is_no_such_tipe_of_answer()
+            there_is_no_such_type_of_answer()
 
 
 def show_list_of_students():
@@ -58,7 +58,7 @@ def show_list_of_students():
         elif answer == 0:
             break
         else:
-            there_is_no_such_tipe_of_answer()
+            there_is_no_such_type_of_answer()
 
 
 def info_about_student():
@@ -79,7 +79,7 @@ def info_about_student():
             if answer == 0:
                 break
             else:
-                there_is_no_such_tipe_of_answer()
+                there_is_no_such_type_of_answer()
 
 
 def change_info_about_student():
@@ -103,7 +103,7 @@ def change_info_about_student():
             if choise == 0:
                 break
             elif choise < 0 or choise > 5:
-                there_is_no_such_tipe_of_answer()
+                there_is_no_such_type_of_answer()
             else:
                 for stud in students:
                     if stud.get_number() == answer:
@@ -175,7 +175,7 @@ def del_students():
                     operation_canceled()
                     break
                 else:
-                    there_is_no_such_tipe_of_answer_and_operation_canceled()
+                    there_is_no_such_type_of_answer_and_operation_canceled()
                     break
 
         elif answer == 2:
@@ -191,10 +191,10 @@ def del_students():
                 operation_canceled()
                 break
             else:
-                there_is_no_such_tipe_of_answer_and_operation_canceled()
+                there_is_no_such_type_of_answer_and_operation_canceled()
                 break
         else:
-            there_is_no_such_tipe_of_answer()
+            there_is_no_such_type_of_answer()
 
         break
 
@@ -214,7 +214,7 @@ def operation_canceled():
     wait_and_clear()
 
 
-def there_is_no_such_tipe_of_answer_and_operation_canceled():
+def there_is_no_such_type_of_answer_and_operation_canceled():
     print("\n")
     print("Такого варианта ответа нет".center(40))
     print("Операция отменена!".center(40))
@@ -226,7 +226,7 @@ def wait_and_clear():
     sys("cls") # Очистка терминала
 
 
-def there_is_no_such_tipe_of_answer():
+def there_is_no_such_type_of_answer():
     print("\n")
     print("Такого варианта ответа нет!".center(40))
     print("Проверьте и попробуйте ещё раз".center(40))
