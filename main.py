@@ -201,8 +201,11 @@ def del_students():
 
 def students_list():
     print("--- Список студентов ---".center(40))
+    i = 1
     for stud in students:
+        stud.set_number(i)
         stud.print_person()
+        i += 1
 
 
 def operation_canceled():
