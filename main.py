@@ -250,6 +250,7 @@ def print_bye():
     print("\nДо свидания!")
 
 
-person = Person()
-students = list()
-start()
+if __name__ == "__main__":
+    person = Person()
+    students = list()
+    start()
