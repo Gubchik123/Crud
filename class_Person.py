@@ -29,8 +29,8 @@ class Person:
 
     def id_generation(self): self.__id = uuid4()
 
-    def print_person(self):
-        print(f"{self.__number}. {self.__surname} {self.__name}")
+    def __str__(self):
+        return f"{self.__number}. {self.__surname} {self.__name}"
 
     def print_info(self):
         print("--- Информация о студенте ---".center(40))
