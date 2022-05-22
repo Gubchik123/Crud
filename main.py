@@ -204,7 +204,7 @@ def students_list():
     i = 1
     for stud in students:
         stud.set_number(i)
-        stud.print_person()
+        print(stud)
         i += 1
 
 
