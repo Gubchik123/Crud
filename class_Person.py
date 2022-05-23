@@ -21,11 +21,14 @@ class Person:
     def enter_number_of_comp(self):
         self.__numberOfComp = input("Введите номер компьютера: ")
 
-    def set_number(self, num): self.__number = num
+    @property  # Getter for student's nik
+    def nik(self): return self.__nik
 
-    def get_nik(self): return self.__nik
+    @property  # Getter for student's number
+    def number(self): return self.__number
 
-    def get_number(self): return self.__number
+    @number.setter  # Setter for student's number
+    def number(self, num): self.__number = num
 
     def id_generation(self): self.__id = uuid4()
 
@@ -40,4 +43,4 @@ class Person:
         print(f"Возраст: {self.__age}")
         print(f"Никнейм: {self.__nik}")
         print(f"Номер компьютера: {self.__numberOfComp}")
-        print(f"Айди: {self.__id}")
+        print(f"ID: {self.__id}")
