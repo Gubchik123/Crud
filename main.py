@@ -25,12 +25,7 @@ def menu():
         print("2 - Добавить студента в группу")
         print("3 - Удалить студента(ов) из группы")
         print("0 - Выйти")
-        try:
-            answer = int(input("Ваш выбор: "))
-            sys("cls")  # Clear console
-        except ValueError:
-            there_is_no_such_type_of_answer()
-            continue
+        answer = try_input("Ваш выбор: ")
 
         if answer == 1:
             show_list_of_students()
@@ -56,12 +51,7 @@ def show_list_of_students():
         print("\n1 - Посмотреть детальную информацию")
         print("2 - Изменить детальную информацию")
         print("0 - Вернуться назад")
-        try:
-            answer = int(input("Ваш выбор: "))
-            sys("cls")  # Clear console
-        except ValueError:
-            there_is_no_such_type_of_answer()
-            continue
+        answer = try_input("Ваш выбор: ")
 
         if answer == 1:
             info_about_student()
@@ -76,111 +66,89 @@ def show_list_of_students():
 # Function for showing information about some student
 def info_about_student():
     students_list()
-    try:
-        answer = int(input("Ваш выбор: "))
-        sys("cls")  # Clear console
-    except ValueError:
-        there_is_no_such_type_of_answer()
+    answer = try_input("\nВведите номер студента, про которого хотите увидеть информацию: ")
+
+    if answer < 1 or answer > len(STUDENTS):
+        there_is_no_such_student_num()
     else:
-        if answer < 1 or answer > len(STUDENTS):
-            there_is_no_such_student_num()
-        else:
-            while True:
-                for stud in STUDENTS:
-                    if stud.number == answer:
-                        stud.print_info()
+        while True:
+            for stud in STUDENTS:
+                if stud.number == answer:
+                    stud.print_info()
 
-                print("\n0 - Вернуться назад")
-                try:
-                    answer = int(input("Ваш выбор: "))
-                    sys("cls")  # Clear console
-                except ValueError:
-                    there_is_no_such_type_of_answer()
-                    continue
+            print("\n0 - Вернуться назад")
+            answer = try_input("Ваш выбор: ")
 
-                if answer == 0:
-                    break
-                else:
-                    there_is_no_such_type_of_answer()
+            if answer == 0:
+                break
+            else:
+                there_is_no_such_type_of_answer()
 
 
 # Function for changing some information about student
 def change_info_about_student():
     students_list()
-    try:
-        answer = int(input("Ваш выбор: "))
-        sys("cls")  # Clear console
-    except ValueError:
-        there_is_no_such_type_of_answer()
-    else:
-        if answer < 1 or answer > len(STUDENTS):
-            there_is_no_such_student_num()
-        else:
-            while True:
-                print("--- Изменение информации ---".center(40))
-                print("Что вы хотите поменять?")
-                print("1 - Поменять имя")
-                print("2 - Поменять фамилию")
-                print("3 - Поменять возраст")
-                print("4 - Поменять никнейм")
-                print("5 - Поменять номер компьютера")
-                print("0 - Вернуться назад")
-                try:
-                    choice = int(input("Ваш выбор: "))
-                    sys("cls")  # Clear console
-                except ValueError:
-                    there_is_no_such_type_of_answer()
-                    continue
+    answer = try_input("\nВведите номер студента, про которого хотите поменять информацию: ")
 
-                if choice == 0:
-                    break
-                elif choice < 0 or choice > 5:
-                    there_is_no_such_type_of_answer()
-                else:
-                    print("--- Изменение информации ---".center(40))
-                    for stud in STUDENTS:
-                        if stud.number == answer:
-                            if choice == 1:
-                                stud.enter_name()
-                            elif choice == 2:
-                                stud.enter_surname()
-                            elif choice == 3:
-                                stud.enter_age()
-                            elif choice == 4:
-                                stud.enter_nik()
-                            else:
-                                stud.enter_number_of_comp()
-                    wait_and_clear()
+    if answer < 1 or answer > len(STUDENTS):
+        there_is_no_such_student_num()
+    else:
+        while True:
+            print("--- Изменение информации ---".center(40))
+            print("Что вы хотите поменять?")
+            print("1 - Поменять имя")
+            print("2 - Поменять фамилию")
+            print("3 - Поменять возраст")
+            print("4 - Поменять никнейм")
+            print("5 - Поменять номер компьютера")
+            print("0 - Вернуться назад")
+            choice = try_input("Ваш выбор: ")
+
+            if choice == 0:
+                break
+            elif choice < 0 or choice > 5:
+                there_is_no_such_type_of_answer()
+            else:
+                print("--- Изменение информации ---".center(40))
+                for stud in STUDENTS:
+                    if stud.number == answer:
+                        if choice == 1:
+                            stud.enter_name()
+                        elif choice == 2:
+                            stud.enter_surname()
+                        elif choice == 3:
+                            stud.enter_age()
+                        elif choice == 4:
+                            stud.enter_nik()
+                        else:
+                            stud.enter_number_of_comp()
+                wait_and_clear()
 
 
 # Function for adding student(s)
 def add_students():
     print("--- Добавление студента(ов) ---".center(40))
-    try:
-        count = int(input("Введите сколько студентов хотите добавить: "))
-        sys("cls")  # Clear console
-    except ValueError:
-        there_is_no_such_type_of_answer()
+    count = try_input("Введите сколько студентов хотите добавить: ")
+    if count < 1:
+        print("\n")
+        print("Не коректный ответ для указания количества студентов!".center(55))
+        wait_and_clear()
     else:
-        if count < 1:
-            print("Не коректное количество пользователей!")
-            wait_and_clear()
-        else:
-            for i in range(count):
-                print(f"--- Студент №{i + 1} ---".center(40))
-                global PERSON
-                PERSON = Person()
-                PERSON.number = i + 1
-                PERSON.enter_name()
-                PERSON.enter_surname()
-                PERSON.enter_age()
-                PERSON.enter_nik()
-                PERSON.enter_number_of_comp()
-                PERSON.id_generation()
+        for i in range(count):
+            print(f"--- Студент №{i + 1} ---".center(40))
+            global PERSON
+            PERSON = Person()
+            PERSON.number = i + 1
+            PERSON.enter_name()
+            PERSON.enter_surname()
+            PERSON.enter_age()
+            PERSON.enter_nik()
+            PERSON.enter_number_of_comp()
+            PERSON.id_generation()
 
-                STUDENTS.append(PERSON)
+            STUDENTS.append(PERSON)
 
-            wait_and_clear()
+        wait_and_clear()
 
 
 # Function for deleting student(s)
@@ -189,24 +157,14 @@ def del_students():
         if len(STUDENTS) == 0:
             list_is_empty()
             break
-
-        print("\n1 - Удалить одного студента")
+        print("--- Удаление студента(ов) ---".center(40))
+        print("1 - Удалить одного студента")
         print("2 - Удалить всех студентов")
-        try:
-            answer = int(input("Ваш выбор: "))
-            sys("cls")  # Clear console
-        except ValueError:
-            there_is_no_such_type_of_answer()
-            continue
+        answer = try_input("Ваш выбор: ")
 
         if answer == 1:
             students_list()
-            try:
-                answer = int(input("\nВведите номер студента которого хотите удалить: "))
-                sys("cls")  # Clear console
-            except ValueError:
-                there_is_no_such_type_of_answer()
-                continue
+            answer = try_input("\nВведите номер студента, которого хотите удалить: ")
 
             if answer < 1 or answer > len(STUDENTS):
                 there_is_no_such_student_num()
@@ -217,6 +175,7 @@ def del_students():
                     for stud in STUDENTS:
                         if stud.number == answer:
                             STUDENTS.remove(stud)
+                            print("\n")
                             print("Студент был успешно удалён!".center(40))
                             wait_and_clear()
                             break
@@ -258,6 +217,22 @@ def students_list():
         i += 1
 
 
+# Function for waiting and clearing
+def wait_and_clear():
+    sleep(3)    # Wait 3 seconds
+    sys("cls")  # Clear console
+
+
+def try_input(question):
+    try:
+        answer = int(input(question))
+        sys("cls")  # Clear console
+        return answer
+    except ValueError:
+        sys("cls")  # Clear console
+        return -1
+
+
 # Function for showing message that action canceled
 def operation_canceled():
     print("\n")
@@ -273,15 +248,8 @@ def there_is_no_such_type_of_answer_and_operation_canceled():
     wait_and_clear()
 
 
-# Function for waiting and clearing
-def wait_and_clear():
-    sleep(3)    # Wait 3 seconds
-    sys("cls")  # Clear console
-
-
 # Function for showing message that user entered invalid answer
 def there_is_no_such_type_of_answer():
-    sys("cls")  # Clear console
     print("\n")
     print("Такого варианта ответа нет!".center(40))
     print("Попробуйте ещё раз".center(40))
