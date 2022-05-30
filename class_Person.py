@@ -6,6 +6,14 @@ class Person:
         self.__name = self.__surname = self.__nik = self.__id = ""
         self.__age = self.__numberOfComp = self.__number = 0
 
+    @staticmethod
+    def __try_input(question):
+        try:
+            answer = int(input(question))
+            return answer
+        except ValueError:
+            return -1
+
     def enter_name(self):
         self.__name = input("Введите имя: ")
 
@@ -13,13 +21,27 @@ class Person:
         self.__surname = input("Введите фамилию: ")
 
     def enter_age(self):
-        self.__age = int(input("Введите возраст: "))
+        while True:
+            age = self.__try_input("Введите возраст: ")
+            if 120 > age > 1:
+                self.__age = age
+                break
+            else:
+                print("Вы ввели некоректный возраст!".center(50))
+                print("Возраст должен быть числом от 1 до 120".center(50))
 
     def enter_nik(self):
         self.__nik = input("Введите никнейм: ")
 
     def enter_number_of_comp(self):
-        self.__numberOfComp = input("Введите номер компьютера: ")
+        while True:
+            num = self.__try_input("Введите номер компьютера: ")
+            if num > 0:
+                self.__numberOfComp = num
+                break
+            else:
+                print("Вы ввели некоректный номер компьютера!".center(50))
+                print("Номер компьютера должен быть числом > 0".center(50))
 
     @property  # Getter for student's nik
     def nik(self): return self.__nik
