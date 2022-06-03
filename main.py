@@ -8,10 +8,13 @@ from os import system as sys     # For clearing console
 
 # Function for asking user about his\her wanting to continue
 def start():
+    print_rules()
+
     print("--- Crud-приложение ---".center(40))
     answer = input("Войти в систему? (Да или нет)\nВаш выбор: ")
     sys("cls")  # Clear console
     if answer.lower() == "да":
+        # Actions for checking file size
         file_stats = os.stat("students.txt")
         if file_stats.st_size == 0:
             pass
@@ -23,6 +26,14 @@ def start():
     else:
         print("Такого варианта ответа нет!")
         print_bye()
+
+
+# Function for printing rules about using crud-app
+def print_rules():
+    print("--- Правила использования crud-приложения ---".center(70))
+    print("1) Просматривайте, добавляйте, изменяйте и удаляйте студентов")
+    print("2) Для сохраниния студентов в файл нужно коректно выйти из программы (в меню)")
+    print("3) Следите за вводом и вводите только нужные символы для коректной работы\n")
 
 
 # Function for choosing future actions
