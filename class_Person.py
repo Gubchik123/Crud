@@ -58,8 +58,7 @@ class Person:
         return f"{self.__number}. {self.__surname} {self.__name}"
 
     def print_info(self):
-        print("--- Информация о студенте ---".center(40))
-        print(f"Номер: {self.__number}")
+        print("--- Информация про студента ---".center(40))
         print(f"Имя: {self.__name}")
         print(f"Фамилия: {self.__surname}")
         print(f"Возраст: {self.__age}")
