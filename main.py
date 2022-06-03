@@ -1,6 +1,9 @@
-from class_Person import Person  # Importing class from my module
-from time import sleep           # Importing special function for waiting
-from os import system as sys     # Importing special function for clearing console
+import pickle  # For working with file
+import os      # For checking file size
+
+from class_Person import Person  # My class
+from time import sleep           # For waiting
+from os import system as sys     # For clearing console
 
 
 # Function for asking user about his\her wanting to continue
@@ -9,6 +12,11 @@ def start():
     answer = input("Войти в систему? (Да или нет)\nВаш выбор: ")
     sys("cls")  # Clear console
     if answer.lower() == "да":
+        file_stats = os.stat("students.txt")
+        if file_stats.st_size == 0:
+            pass
+        else:
+            reading_from_file()
         menu()
     elif answer.lower() == "нет":
         print_bye()
@@ -34,6 +42,7 @@ def menu():
         elif answer == 3:
             del_students()
         elif answer == 0:
+            writing_in_file()
             print_bye()
             break
         else:
@@ -215,6 +224,19 @@ def students_list():
         stud.number = i
         print(stud)
         i += 1
+
+
+# Function for reading student list from file
+def reading_from_file():
+    global STUDENTS
+    with open("students.txt", "rb") as file:
+        STUDENTS = pickle.load(file)
+
+
+# Function for writing student list in file
+def writing_in_file():
+    with open("students.txt", "wb") as file:
+        pickle.dump(STUDENTS, file)
 
 
 # Function for waiting and clearing
