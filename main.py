@@ -1,13 +1,13 @@
 import pickle  # For working with file
-import os      # For checking file size
+import os  # For checking file size
 
 from class_Person import Person  # My class
-from time import sleep           # For waiting
-from os import system as sys     # For clearing console
+from time import sleep  # For waiting
+from os import system as sys  # For clearing console
 
 
-# Function for asking user about his\her wanting to continue
 def start():
+    """Function for asking user about his or her wanting to continue"""
     print_rules()
 
     print("--- Crud-приложение ---".center(40))
@@ -28,16 +28,16 @@ def start():
         print_bye()
 
 
-# Function for printing rules about using crud-app
 def print_rules():
+    """Function for printing rules about using crud-app"""
     print("--- Правила использования crud-приложения ---".center(70))
     print("1) Просматривайте, добавляйте, изменяйте и удаляйте студентов")
     print("2) Для сохраниния студентов в файл нужно коректно выйти из программы (в меню)")
     print("3) Следите за вводом и вводите только нужные символы для коректной работы\n")
 
 
-# Function for choosing future actions
 def menu():
+    """Function for choosing future actions"""
     while True:
         print("--- Меню ---".center(40))
         print("1 - Показать список студентов")
@@ -60,8 +60,8 @@ def menu():
             there_is_no_such_type_of_answer()
 
 
-# Function for showing students list
 def show_list_of_students():
+    """Function for showing students list"""
     while True:
         if len(STUDENTS) == 0:
             list_is_empty()
@@ -83,8 +83,8 @@ def show_list_of_students():
             there_is_no_such_type_of_answer()
 
 
-# Function for showing information about some student
 def info_about_student():
+    """Function for showing information about some student"""
     students_list()
     answer = try_input("\nВведите номер студента, про которого хотите увидеть информацию: ")
 
@@ -105,8 +105,8 @@ def info_about_student():
                 there_is_no_such_type_of_answer()
 
 
-# Function for changing some information about student
 def change_info_about_student():
+    """Function for changing some information about student"""
     students_list()
     answer = try_input("\nВведите номер студента, про которого хотите поменять информацию: ")
 
@@ -145,8 +145,8 @@ def change_info_about_student():
                 wait_and_clear()
 
 
-# Function for adding student(s)
 def add_students():
+    """Function for adding student(s)"""
     print("--- Добавление студента(ов) ---".center(40))
     count = try_input("Введите сколько студентов хотите добавить: ")
     if count < 1:
@@ -171,8 +171,8 @@ def add_students():
         wait_and_clear()
 
 
-# Function for deleting student(s)
 def del_students():
+    """Function for deleting student(s)"""
     while True:
         if len(STUDENTS) == 0:
             list_is_empty()
@@ -227,8 +227,8 @@ def del_students():
         break
 
 
-# Function for printing students list
 def students_list():
+    """Function for printing students list"""
     print("--- Список студентов ---".center(40))
     i = 1
     for stud in STUDENTS:
@@ -237,26 +237,27 @@ def students_list():
         i += 1
 
 
-# Function for reading student list from file
 def reading_from_file():
+    """Function for reading student list from file"""
     global STUDENTS
     with open("students.txt", "rb") as file:
         STUDENTS = pickle.load(file)
 
 
-# Function for writing student list in file
 def writing_in_file():
+    """Function for writing student list in file"""
     with open("students.txt", "wb") as file:
         pickle.dump(STUDENTS, file)
 
 
-# Function for waiting and clearing
 def wait_and_clear():
-    sleep(3)    # Wait 3 seconds
+    """Function for waiting and clearing"""
+    sleep(3)  # Wait 3 seconds
     sys("cls")  # Clear console
 
 
 def try_input(question):
+    """Function for safe input answer in program"""
     try:
         answer = int(input(question))
         sys("cls")  # Clear console
@@ -266,51 +267,51 @@ def try_input(question):
         return -1
 
 
-# Function for showing message that action canceled
 def operation_canceled():
+    """Function for showing message that action canceled"""
     print("\n")
     print("Операция отменена!".center(40))
     wait_and_clear()
 
 
-# Function for showing message that user entered invalid answer and action canceled
 def there_is_no_such_type_of_answer_and_operation_canceled():
+    """Function for showing message that user entered invalid answer and action canceled"""
     print("\n")
     print("Такого варианта ответа нет".center(40))
     print("Операция отменена!".center(40))
     wait_and_clear()
 
 
-# Function for showing message that user entered invalid answer
 def there_is_no_such_type_of_answer():
+    """Function for showing message that user entered invalid answer"""
     print("\n")
     print("Такого варианта ответа нет!".center(40))
     print("Попробуйте ещё раз".center(40))
     wait_and_clear()
 
 
-# Function for showing message that the list of student is empty
 def list_is_empty():
+    """Function for showing message that the list of student is empty"""
     print("\n")
     print("Список студентов пуст!".center(40))
     wait_and_clear()
 
 
-# Function for showing message that user entered invalid student number
 def there_is_no_such_student_num():
+    """Function for showing message that user entered invalid student number"""
     print("\n")
     print("Студента с таким номером нет!".center(40))
     print("Проверьте и попробуйте ещё раз".center(40))
     wait_and_clear()
 
 
-# Function for showing message "Good bye!"
 def print_bye():
+    """Function for showing message 'Good bye!'"""
     print("\nДо свидания!")
 
 
 # Start of our program
 if __name__ == "__main__":
-    PERSON = Person()   # Object of my class for future actions with it
-    STUDENTS = list()   # List for saving all students
+    PERSON = Person()  # Object of my class for future actions with it
+    STUDENTS = list()  # List for saving all students
     start()  # Start
