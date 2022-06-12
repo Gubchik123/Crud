@@ -1,317 +1,276 @@
-import pickle  # For working with file
-import os  # For checking file size
+import pickle         # For working with file
+import os             # For checking file size
+import tkinter as tk  # For GUI
 
-from class_Person import Person  # My class
-from time import sleep  # For waiting
-from os import system as sys  # For clearing console
+from class_Person import Person        # Class Person
+from tkinter import ttk                # For Combobox
+from tkinter import messagebox as msg  # For showing message or warning
 
 
-def start():
-    """Function for asking user about his or her wanting to continue"""
-    print_rules()
+def set_characteristics(window: tk.Tk | tk.Toplevel, geometry: str):
+    window.title("Crud-app")
+    window.geometry(geometry)
+    window.resizable(False, False)
+    window["bg"] = "grey60"
+    set_row_and_column_configure(window)
 
-    print("--- Crud-приложение ---".center(40))
-    answer = input("Войти в систему? (Да или нет)\nВаш выбор: ")
-    sys("cls")  # Clear console
-    if answer.lower() == "да":
-        # Actions for checking file size
-        file_stats = os.stat("students.txt")
-        if file_stats.st_size == 0:
-            pass
-        else:
-            reading_from_file()
-        menu()
-    elif answer.lower() == "нет":
-        print_bye()
+
+def set_row_and_column_configure(window: tk.Tk | tk.Toplevel):
+    for i in range(16):
+        window.grid_rowconfigure(i, minsize=50)
+        window.grid_columnconfigure(i, minsize=50)
+
+
+def make_button(master: tk.Tk | tk.Toplevel, text: str, function, row: int, column: int):
+    btn = tk.Button(master, text=text, command=function,
+                    activebackground="light blue", font=("Arial", 25, "normal"))
+    btn.grid(row=row, column=column, columnspan=5, rowspan=2, sticky="wens")
+    return btn
+
+
+def make_entry(master: tk.Toplevel, row: int, column: int, column_span: int):
+    entry = tk.Entry(master, font=("Arial", 20, "normal"))
+    entry.grid(row=row, column=column,
+               rowspan=2, columnspan=column_span, sticky="wens")
+    return entry
+
+
+def make_label(master: tk.Toplevel, text: str, font_size: int,
+               row: int, column: int, column_span: int):
+    label = tk.Label(master, text=text, font=("Arial", font_size, "bold"), bg="grey60")
+    label.grid(row=row, column=column, columnspan=column_span, sticky="w")
+    return label
+
+
+def create_window():
+    ROOT.withdraw()
+    win = tk.Toplevel()
+    set_characteristics(win, "800x750+700+20")
+
+    make_label(win, "Name:", 15, row=0, column=9, column_span=10)
+    name_ent = make_entry(win, row=1, column=9, column_span=6)
+
+    make_label(win, "Surname:", 15, row=0, column=1, column_span=10)
+    surname_ent = make_entry(win, row=1, column=1, column_span=6)
+
+    make_label(win, "Nik name:", 15, row=4, column=1, column_span=10)
+    nik_ent = make_entry(win, row=5, column=1, column_span=14)
+
+    make_label(win, "Age:", 15, row=8, column=1, column_span=10)
+    age_ent = make_entry(win, row=9, column=1, column_span=6)
+
+    make_label(win, "Number of comp:", 15, row=8, column=9, column_span=10)
+    num_of_comp_ent = make_entry(win, row=9, column=9, column_span=6)
+
+    make_button(win, "Create",
+                lambda: create_action(win, name_ent, surname_ent, nik_ent, age_ent, num_of_comp_ent),
+                row=12, column=10)
+
+    win.mainloop()
+
+
+def create_action(window: tk.Toplevel, name: tk.Entry, surname: tk.Entry, nik: tk.Entry,
+                  age: tk.Entry, num_of_comp: tk.Entry):
+    if name.get() and surname.get() and nik.get() and age.get() and num_of_comp.get():
+        person = Person()
+
+        check_name = checking_before_adding("Name", name, person)
+        check_surname = checking_before_adding("Surname", surname, person)
+        check_age = checking_before_adding("Age", age, person)
+        check_num_of_comp = checking_before_adding("Num of comp", num_of_comp, person)
+
+        person.nik = nik.get()
+        person.id_generation()
+
+        if check_name and check_surname and check_age and check_num_of_comp:
+            LST.insert(tk.END, person)
+            PEOPLE.append(person)
+            destroy_this_window_and_show_root(window)
     else:
-        print("Такого варианта ответа нет!")
-        print_bye()
+        message("error", "Not all fields are filled!")
 
 
-def print_rules():
-    """Function for printing rules about using crud-app"""
-    print("--- Правила использования crud-приложения ---".center(70))
-    print("1) Просматривайте, добавляйте, изменяйте и удаляйте студентов")
-    print("2) Для сохраниния студентов в файл нужно коректно выйти из программы (в меню)")
-    print("3) Следите за вводом и вводите только нужные символы для коректной работы\n")
+def read_window():
+    element = LST.curselection()
+    if len(element) != 0:
+        person = finding_person(element)
+
+        ROOT.withdraw()
+        win = tk.Toplevel()
+        set_characteristics(win, "800x750+650+30")
+
+        make_label(win, f"Surname and name: {person.surname} {person.name}", 25,
+                   row=1, column=1, column_span=10)
+        make_label(win, f"Nik name: {person.nik}", 25,
+                   row=3, column=1, column_span=10)
+        make_label(win, f"Age: {person.age}", 25,
+                   row=5, column=1, column_span=10)
+        make_label(win, f"Number of computer: {person.num_of_comp}", 25,
+                   row=7, column=1, column_span=10)
+        make_label(win, f"ID: {person.id}", 25,
+                   row=9, column=1, column_span=30)
+
+        make_button(win, "<- Back", lambda: destroy_this_window_and_show_root(win),
+                    row=12, column=10)
+
+        win.mainloop()
 
 
-def menu():
-    """Function for choosing future actions"""
-    while True:
-        print("--- Меню ---".center(40))
-        print("1 - Показать список студентов")
-        print("2 - Добавить студента в группу")
-        print("3 - Удалить студента(ов) из группы")
-        print("0 - Выйти")
-        answer = try_input("Ваш выбор: ")
+def update_window():
+    element = LST.curselection()
+    if len(element) != 0:
+        answer = tk.StringVar()
 
-        if answer == 1:
-            show_list_of_students()
-        elif answer == 2:
-            add_students()
-        elif answer == 3:
-            del_students()
-        elif answer == 0:
-            writing_in_file()
-            print_bye()
-            break
+        ROOT.withdraw()
+        win = tk.Toplevel()
+        set_characteristics(win, "800x550+650+50")
+
+        make_label(win, "What do you want to update?", 15, row=1, column=1, column_span=20)
+        choice = ttk.Combobox(win, textvariable=answer, font=("Arial", 15, "normal"),
+                              values=("Name", "Surname", "Age", "Nik name", "Number of computer"))
+        choice.grid(row=2, column=1, columnspan=8, sticky="wens")
+
+        lbl = make_label(win, "", 15, row=4, column=1, column_span=10)
+        lbl.configure(textvariable=answer)
+        change_ent = make_entry(win, row=5, column=1, column_span=14)
+
+        make_button(win, "Update", lambda: update_action(win, choice, change_ent, element),
+                    row=8, column=10)
+
+        win.mainloop()
+
+
+def update_action(window: tk.Toplevel, choice: ttk.Combobox, change_ent: tk.Entry, element):
+    person = finding_person(element)
+
+    check = checking_before_adding(choice.get(), change_ent, person)
+
+    if check:
+        # Updating person in Listbox
+        LST.delete(element[0])
+        LST.insert(element[0], person)
+        # Updating person in people list
+        for p in PEOPLE:
+            if p.id == person.id:
+                p = person
+
+        destroy_this_window_and_show_root(window)
+
+
+def delete_action():
+    person = LST.curselection()
+    if len(person) != 0:
+        answer = message("ask", "Are you really want to delete this person?")
+        if answer:
+            LST.delete(person)
+            PEOPLE.pop(person[0])
+
+
+def message(name: str, mess: str):
+    if name == "ask":
+        answer = msg.askyesno("Last question", mess)
+        return answer
+    elif name == "error":
+        msg.showerror("Error", mess)
+
+
+def checking_before_adding(what_check: str, what_adding: tk.Entry, person: Person):
+    if what_check == "Name":
+        if what_adding.get().isalpha():
+            person.name = what_adding.get()
+            return True
         else:
-            there_is_no_such_type_of_answer()
-
-
-def show_list_of_students():
-    """Function for showing students list"""
-    while True:
-        if len(STUDENTS) == 0:
-            list_is_empty()
-            break
-
-        students_list()
-        print("\n1 - Посмотреть детальную информацию")
-        print("2 - Изменить детальную информацию")
-        print("0 - Вернуться назад")
-        answer = try_input("Ваш выбор: ")
-
-        if answer == 1:
-            info_about_student()
-        elif answer == 2:
-            change_info_about_student()
-        elif answer == 0:
-            break
+            message("error", "Name must be words from letters!")
+            clearing_entry(what_adding)
+            return False
+    elif what_check == "Surname":
+        if what_adding.get().isalpha():
+            person.surname = what_adding.get()
+            return True
         else:
-            there_is_no_such_type_of_answer()
-
-
-def info_about_student():
-    """Function for showing information about some student"""
-    students_list()
-    answer = try_input("\nВведите номер студента, про которого хотите увидеть информацию: ")
-
-    if answer < 1 or answer > len(STUDENTS):
-        there_is_no_such_student_num()
-    else:
-        while True:
-            for stud in STUDENTS:
-                if stud.number == answer:
-                    stud.print_info()
-
-            print("\n0 - Вернуться назад")
-            answer = try_input("Ваш выбор: ")
-
-            if answer == 0:
-                break
+            message("error", "Surname must be words from letters!")
+            clearing_entry(what_adding)
+            return False
+    elif what_check == "Age":
+        if what_adding.get().isdigit():
+            if 120 > int(what_adding.get()) > 0:
+                person.age = int(what_adding.get())
+                return True
             else:
-                there_is_no_such_type_of_answer()
-
-
-def change_info_about_student():
-    """Function for changing some information about student"""
-    students_list()
-    answer = try_input("\nВведите номер студента, про которого хотите поменять информацию: ")
-
-    if answer < 1 or answer > len(STUDENTS):
-        there_is_no_such_student_num()
-    else:
-        while True:
-            print("--- Изменение информации ---".center(40))
-            print("Что вы хотите поменять?")
-            print("1 - Поменять имя")
-            print("2 - Поменять фамилию")
-            print("3 - Поменять возраст")
-            print("4 - Поменять никнейм")
-            print("5 - Поменять номер компьютера")
-            print("0 - Вернуться назад")
-            choice = try_input("Ваш выбор: ")
-
-            if choice == 0:
-                break
-            elif choice < 0 or choice > 5:
-                there_is_no_such_type_of_answer()
-            else:
-                print("--- Изменение информации ---".center(40))
-                for stud in STUDENTS:
-                    if stud.number == answer:
-                        if choice == 1:
-                            stud.enter_name()
-                        elif choice == 2:
-                            stud.enter_surname()
-                        elif choice == 3:
-                            stud.enter_age()
-                        elif choice == 4:
-                            stud.enter_nik()
-                        else:
-                            stud.enter_number_of_comp()
-                wait_and_clear()
-
-
-def add_students():
-    """Function for adding student(s)"""
-    print("--- Добавление студента(ов) ---".center(40))
-    count = try_input("Введите сколько студентов хотите добавить: ")
-    if count < 1:
-        print("\n")
-        print("Не коректный ответ для указания количества студентов!".center(55))
-        wait_and_clear()
-    else:
-        for i in range(count):
-            print(f"--- Студент №{i + 1} ---".center(40))
-            global PERSON
-            PERSON = Person()
-            PERSON.number = i + 1
-            PERSON.enter_name()
-            PERSON.enter_surname()
-            PERSON.enter_age()
-            PERSON.enter_nik()
-            PERSON.enter_number_of_comp()
-            PERSON.id_generation()
-
-            STUDENTS.append(PERSON)
-
-        wait_and_clear()
-
-
-def del_students():
-    """Function for deleting student(s)"""
-    while True:
-        if len(STUDENTS) == 0:
-            list_is_empty()
-            break
-        print("--- Удаление студента(ов) ---".center(40))
-        print("1 - Удалить одного студента")
-        print("2 - Удалить всех студентов")
-        answer = try_input("Ваш выбор: ")
-
-        if answer == 1:
-            students_list()
-            answer = try_input("\nВведите номер студента, которого хотите удалить: ")
-
-            if answer < 1 or answer > len(STUDENTS):
-                there_is_no_such_student_num()
-            else:
-                choice = input("Вы действительно хотите удалить этого студента? (Да или нет)\nВаш выбор: ")
-                sys("cls")
-                if choice.lower() == "да":
-                    for stud in STUDENTS:
-                        if stud.number == answer:
-                            STUDENTS.remove(stud)
-                            print("\n")
-                            print("Студент был успешно удалён!".center(40))
-                            wait_and_clear()
-                            break
-                elif choice.lower() == "нет":
-                    operation_canceled()
-                    break
-                else:
-                    there_is_no_such_type_of_answer_and_operation_canceled()
-                    break
-
-        elif answer == 2:
-            choice = input("Вы действительно хотите удалить всех студентов? (Да или нет)\nВаш выбор: ")
-            sys("cls")  # Clear console
-            if choice.lower() == "да":
-                STUDENTS.clear()
-                print("\n")
-                print("Студенты были успешно удалены!".center(40))
-                wait_and_clear()
-                break
-            elif choice.lower() == "нет":
-                operation_canceled()
-                break
-            else:
-                there_is_no_such_type_of_answer_and_operation_canceled()
-                break
+                message("error", "Invalid age for person!\nThe age must be from 1 to 120!")
+                clearing_entry(what_adding)
+                return False
         else:
-            there_is_no_such_type_of_answer()
+            message("error", "The age must be is digit!")
+            clearing_entry(what_adding)
+            return False
+    elif what_check == "Nik name":
+        person.nik = what_adding.get()
+    else:
+        if what_adding.get().isdigit():
+            person.num_of_comp = int(what_adding.get())
+            return True
+        else:
+            message("error", "The number of computer must be is digit!")
+            clearing_entry(what_adding)
+            return False
 
-        break
+
+def clearing_entry(entry: tk.Entry):
+    entry.delete(0, tk.END)
 
 
-def students_list():
-    """Function for printing students list"""
-    print("--- Список студентов ---".center(40))
-    i = 1
-    for stud in STUDENTS:
-        stud.number = i
-        print(stud)
-        i += 1
+def destroy_this_window_and_show_root(window: tk.Toplevel):
+    window.destroy()
+    ROOT.deiconify()
+
+
+def finding_person(element):
+    surname, name = LST.get(element).split()
+
+    for p in PEOPLE:
+        if surname == p.surname and name == p.name:
+            return p
 
 
 def reading_from_file():
     """Function for reading student list from file"""
-    global STUDENTS
-    with open("students.txt", "rb") as file:
-        STUDENTS = pickle.load(file)
+    global PEOPLE
+    # Actions for checking file size
+    file_stats = os.stat("people.txt")
+    if file_stats.st_size != 0:
+        with open("people.txt", "rb") as file:
+            PEOPLE = pickle.load(file)
+
+        for person in PEOPLE:
+            LST.insert(tk.END, person)
 
 
 def writing_in_file():
     """Function for writing student list in file"""
-    with open("students.txt", "wb") as file:
-        pickle.dump(STUDENTS, file)
+    with open("people.txt", "wb") as file:
+        pickle.dump(PEOPLE, file)
 
 
-def wait_and_clear():
-    """Function for waiting and clearing"""
-    sleep(3)  # Wait 3 seconds
-    sys("cls")  # Clear console
+PEOPLE = list()
 
+ROOT = tk.Tk()
+set_characteristics(ROOT, "800x650+650+50")
 
-def try_input(question):
-    """Function for safe input answer in program"""
-    try:
-        answer = int(input(question))
-        sys("cls")  # Clear console
-        return answer
-    except ValueError:
-        sys("cls")  # Clear console
-        return -1
+scrollbar = tk.Scrollbar(ROOT)
+scrollbar.grid(row=1, column=7, rowspan=11, sticky="wens")
 
+LST = tk.Listbox(yscrollcommand=scrollbar.set, font=("Arial", 15, "bold"))
+LST.grid(row=1, column=1, rowspan=11, columnspan=6, sticky="wens")
 
-def operation_canceled():
-    """Function for showing message that action canceled"""
-    print("\n")
-    print("Операция отменена!".center(40))
-    wait_and_clear()
+reading_from_file()
 
+make_button(ROOT, "Create", create_window, row=1, column=10)
+make_button(ROOT, "Read", read_window, row=4, column=10)
+make_button(ROOT, "Update", update_window, row=7, column=10)
+make_button(ROOT, "Delete", delete_action, row=10, column=10)
 
-def there_is_no_such_type_of_answer_and_operation_canceled():
-    """Function for showing message that user entered invalid answer and action canceled"""
-    print("\n")
-    print("Такого варианта ответа нет".center(40))
-    print("Операция отменена!".center(40))
-    wait_and_clear()
+scrollbar.config(command=LST.yview)
+ROOT.mainloop()
 
-
-def there_is_no_such_type_of_answer():
-    """Function for showing message that user entered invalid answer"""
-    print("\n")
-    print("Такого варианта ответа нет!".center(40))
-    print("Попробуйте ещё раз".center(40))
-    wait_and_clear()
-
-
-def list_is_empty():
-    """Function for showing message that the list of student is empty"""
-    print("\n")
-    print("Список студентов пуст!".center(40))
-    wait_and_clear()
-
-
-def there_is_no_such_student_num():
-    """Function for showing message that user entered invalid student number"""
-    print("\n")
-    print("Студента с таким номером нет!".center(40))
-    print("Проверьте и попробуйте ещё раз".center(40))
-    wait_and_clear()
-
-
-def print_bye():
-    """Function for showing message 'Good bye!'"""
-    print("\nДо свидания!")
-
-
-# Start of our program
-if __name__ == "__main__":
-    PERSON = Person()  # Object of my class for future actions with it
-    STUDENTS = list()  # List for saving all students
-    start()  # Start
+writing_in_file()
