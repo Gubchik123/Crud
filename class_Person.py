@@ -13,31 +13,31 @@ class Person:
     def name(self): return self.__name
 
     @name.setter  # Setter for person's name
-    def name(self, name): self.__name = name
+    def name(self, item): self.__name = item
 
     @property  # Getter for person's surname
     def surname(self): return self.__surname
 
     @surname.setter  # Setter for person's surname
-    def surname(self, surname): self.__surname = surname
+    def surname(self, item): self.__surname = item
 
     @property  # Getter for person's nik
     def nik(self): return self.__nik
 
     @nik.setter  # Setter for person's nik
-    def nik(self, nik): self.nik = nik
+    def nik(self, item): self.nik = item
 
     @property  # Getter for person's age
     def age(self): return self.__age
 
     @age.setter  # Setter for person's age
-    def age(self, age): self.__age = age
+    def age(self, item): self.__age = item
 
     @property  # Getter for person's number of computer
     def num_of_comp(self): return self.__numberOfComp
 
     @num_of_comp.setter  # Setter for person's number of computer
-    def num_of_comp(self, num_of_comp): self.__numberOfComp = num_of_comp
+    def num_of_comp(self, item): self.__numberOfComp = item
 
     @property  # Getter for person's id
     def id(self): return self.__id
