@@ -25,7 +25,7 @@ class Person:
     def nik(self): return self.__nik
 
     @nik.setter  # Setter for person's nik
-    def nik(self, item): self.nik = item
+    def nik(self, item): self.__nik = item
 
     @property  # Getter for person's age
     def age(self): return self.__age
