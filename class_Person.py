@@ -39,4 +39,7 @@ class Person:
     @num_of_comp.setter  # Setter for person's number of computer
     def num_of_comp(self, num_of_comp): self.__numberOfComp = num_of_comp
 
+    @property  # Getter for person's id
+    def id(self): return self.__id
+
     def id_generation(self): self.__id = uuid4()
