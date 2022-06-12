@@ -4,64 +4,39 @@ from uuid import uuid4
 class Person:
     def __init__(self):
         self.__name = self.__surname = self.__nik = self.__id = ""
-        self.__age = self.__numberOfComp = self.__number = 0
-
-    @staticmethod
-    def __try_input(question):
-        try:
-            answer = int(input(question))
-            return answer
-        except ValueError:
-            return -1
-
-    def enter_name(self):
-        self.__name = input("Введите имя: ")
-
-    def enter_surname(self):
-        self.__surname = input("Введите фамилию: ")
-
-    def enter_age(self):
-        while True:
-            age = self.__try_input("Введите возраст: ")
-            if 120 > age > 1:
-                self.__age = age
-                break
-            else:
-                print("Вы ввели некоректный возраст!".center(50))
-                print("Возраст должен быть числом от 1 до 120".center(50))
-
-    def enter_nik(self):
-        self.__nik = input("Введите никнейм: ")
-
-    def enter_number_of_comp(self):
-        while True:
-            num = self.__try_input("Введите номер компьютера: ")
-            if num > 0:
-                self.__numberOfComp = num
-                break
-            else:
-                print("Вы ввели некоректный номер компьютера!".center(50))
-                print("Номер компьютера должен быть числом > 0".center(50))
-
-    @property  # Getter for student's nik
-    def nik(self): return self.__nik
-
-    @property  # Getter for student's number
-    def number(self): return self.__number
-
-    @number.setter  # Setter for student's number
-    def number(self, num): self.__number = num
-
-    def id_generation(self): self.__id = uuid4()
+        self.__age = self.__numberOfComp = 0
 
     def __str__(self):
-        return f"{self.__number}. {self.__surname} {self.__name}"
+        return f"{self.__surname} {self.__name}"
 
-    def print_info(self):
-        print("--- Информация про студента ---".center(40))
-        print(f"Имя: {self.__name}")
-        print(f"Фамилия: {self.__surname}")
-        print(f"Возраст: {self.__age}")
-        print(f"Никнейм: {self.__nik}")
-        print(f"Номер компьютера: {self.__numberOfComp}")
-        print(f"ID: {self.__id}")
+    @property  # Getter for person's name
+    def name(self): return self.__name
+
+    @name.setter  # Setter for person's name
+    def name(self, name): self.__name = name
+
+    @property  # Getter for person's surname
+    def surname(self): return self.__surname
+
+    @surname.setter  # Setter for person's surname
+    def surname(self, surname): self.__surname = surname
+
+    @property  # Getter for person's nik
+    def nik(self): return self.__nik
+
+    @nik.setter  # Setter for person's nik
+    def nik(self, nik): self.nik = nik
+
+    @property  # Getter for person's age
+    def age(self): return self.__age
+
+    @age.setter  # Setter for person's age
+    def age(self, age): self.__age = age
+
+    @property  # Getter for person's number of computer
+    def num_of_comp(self): return self.__numberOfComp
+
+    @num_of_comp.setter  # Setter for person's number of computer
+    def num_of_comp(self, num_of_comp): self.__numberOfComp = num_of_comp
+
+    def id_generation(self): self.__id = uuid4()
