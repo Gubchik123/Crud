@@ -8,6 +8,7 @@ from tkinter import messagebox as msg  # For showing message or warning
 
 
 def set_characteristics(window: tk.Tk | tk.Toplevel, geometry: str):
+    """Function for setting window characteristics"""
     window.title("Crud-app")
     window.geometry(geometry)
     window.resizable(False, False)
@@ -16,12 +17,14 @@ def set_characteristics(window: tk.Tk | tk.Toplevel, geometry: str):
 
 
 def set_row_and_column_configure(window: tk.Tk | tk.Toplevel):
+    """Function for setting window row and column configure"""
     for i in range(16):
         window.grid_rowconfigure(i, minsize=50)
         window.grid_columnconfigure(i, minsize=50)
 
 
 def make_button(master: tk.Tk | tk.Toplevel, text: str, function, row: int, column: int):
+    """Function for making a button"""
     btn = tk.Button(master, text=text, command=function,
                     activebackground="light blue", font=("Arial", 25, "normal"))
     btn.grid(row=row, column=column, columnspan=5, rowspan=2, sticky="wens")
@@ -29,6 +32,7 @@ def make_button(master: tk.Tk | tk.Toplevel, text: str, function, row: int, colu
 
 
 def make_entry(master: tk.Toplevel, row: int, column: int, column_span: int):
+    """Function for making an entering field"""
     entry = tk.Entry(master, font=("Arial", 20, "normal"))
     entry.grid(row=row, column=column,
                rowspan=2, columnspan=column_span, sticky="wens")
@@ -37,12 +41,14 @@ def make_entry(master: tk.Toplevel, row: int, column: int, column_span: int):
 
 def make_label(master: tk.Toplevel, text: str, font_size: int,
                row: int, column: int, column_span: int):
+    """Function for making a label"""
     label = tk.Label(master, text=text, font=("Arial", font_size, "bold"), bg="grey60")
     label.grid(row=row, column=column, columnspan=column_span, sticky="w")
     return label
 
 
 def create_window():
+    """Function for creating new person"""
     ROOT.withdraw()
     win = tk.Toplevel()
     set_characteristics(win, "800x750+700+20")
@@ -71,6 +77,7 @@ def create_window():
 
 def create_action(window: tk.Toplevel, name: tk.Entry, surname: tk.Entry, nik: tk.Entry,
                   age: tk.Entry, num_of_comp: tk.Entry):
+    """Function for action after creating window"""
     if name.get() and surname.get() and nik.get() and age.get() and num_of_comp.get():
         person = Person()
 
@@ -91,6 +98,7 @@ def create_action(window: tk.Toplevel, name: tk.Entry, surname: tk.Entry, nik: t
 
 
 def read_window():
+    """Function for showing information about person"""
     element = LST.curselection()
     if len(element) != 0:
         person = finding_person(element)
@@ -117,6 +125,7 @@ def read_window():
 
 
 def update_window():
+    """Function for updating some information about person"""
     element = LST.curselection()
     if len(element) != 0:
         answer = tk.StringVar()
@@ -141,6 +150,7 @@ def update_window():
 
 
 def update_action(window: tk.Toplevel, choice: ttk.Combobox, change_ent: tk.Entry, element):
+    """Function for action after updating window"""
     person = finding_person(element)
 
     check = checking_before_adding(choice.get(), change_ent, person)
@@ -158,6 +168,7 @@ def update_action(window: tk.Toplevel, choice: ttk.Combobox, change_ent: tk.Entr
 
 
 def delete_action():
+    """Function for deleting person"""
     person = LST.curselection()
     if len(person) != 0:
         answer = message("ask", "Are you really want to delete this person?")
@@ -167,6 +178,7 @@ def delete_action():
 
 
 def message(name: str, mess: str):
+    """Function for showing some message"""
     if name == "ask":
         answer = msg.askyesno("Last question", mess)
         return answer
@@ -175,6 +187,7 @@ def message(name: str, mess: str):
 
 
 def checking_before_adding(what_check: str, what_adding: tk.Entry, person: Person):
+    """Function for some checking on valid information before adding"""
     if what_check == "Name":
         if what_adding.get().isalpha():
             person.name = what_adding.get()
@@ -217,15 +230,18 @@ def checking_before_adding(what_check: str, what_adding: tk.Entry, person: Perso
 
 
 def clearing_entry(entry: tk.Entry):
+    """Function for clearing some entry"""
     entry.delete(0, tk.END)
 
 
 def destroy_this_window_and_show_root(window: tk.Toplevel):
+    """Function for destroying some window and showing again main window"""
     window.destroy()
     ROOT.deiconify()
 
 
 def finding_person(element):
+    """Function for returning person object which was found"""
     surname, name = LST.get(element).split()
 
     for p in PEOPLE:
@@ -234,7 +250,7 @@ def finding_person(element):
 
 
 def reading_from_file():
-    """Function for reading student list from file"""
+    """Function for reading person list from file"""
     global PEOPLE
     # Actions for checking file size
     file_stats = os.stat("people.txt")
@@ -247,7 +263,7 @@ def reading_from_file():
 
 
 def writing_in_file():
-    """Function for writing student list in file"""
+    """Function for writing person list in file"""
     with open("people.txt", "wb") as file:
         pickle.dump(PEOPLE, file)
 
