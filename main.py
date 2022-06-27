@@ -269,25 +269,26 @@ def writing_in_file():
         pickle.dump(PEOPLE, file)
 
 
-PEOPLE = list()
+if __name__ == '__main__':
+    PEOPLE = list()
 
-ROOT = tk.Tk()
-set_characteristics(ROOT, "800x650+650+50")
+    ROOT = tk.Tk()
+    set_characteristics(ROOT, "800x650+650+50")
 
-scrollbar = tk.Scrollbar(ROOT)
-scrollbar.grid(row=1, column=7, rowspan=11, sticky="wens")
+    scrollbar = tk.Scrollbar(ROOT)
+    scrollbar.grid(row=1, column=7, rowspan=11, sticky="wens")
 
-LST = tk.Listbox(yscrollcommand=scrollbar.set, font=("Arial", 15, "bold"))
-LST.grid(row=1, column=1, rowspan=11, columnspan=6, sticky="wens")
+    LST = tk.Listbox(yscrollcommand=scrollbar.set, font=("Arial", 15, "bold"))
+    LST.grid(row=1, column=1, rowspan=11, columnspan=6, sticky="wens")
 
-reading_from_file()
+    reading_from_file()
 
-make_button(ROOT, "Create", create_window, row=1, column=10)
-make_button(ROOT, "Read", read_window, row=4, column=10)
-make_button(ROOT, "Update", update_window, row=7, column=10)
-make_button(ROOT, "Delete", delete_action, row=10, column=10)
+    make_button(ROOT, "Create", create_window, row=1, column=10)
+    make_button(ROOT, "Read", read_window, row=4, column=10)
+    make_button(ROOT, "Update", update_window, row=7, column=10)
+    make_button(ROOT, "Delete", delete_action, row=10, column=10)
 
-scrollbar.config(command=LST.yview)
-ROOT.mainloop()
+    scrollbar.config(command=LST.yview)
+    ROOT.mainloop()
 
-writing_in_file()
+    writing_in_file()
