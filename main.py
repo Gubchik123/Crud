@@ -177,56 +177,53 @@ def delete_action():
             PEOPLE.pop(person[0])
 
 
-def message(name: str, mess: str):
+def message(title: str, mess: str):
     """Function for showing some message"""
-    if name == "ask":
+    if title == "ask":
         answer = msg.askyesno("Last question", mess)
         return answer
-    elif name == "error":
+    elif title == "error":
         msg.showerror("Error", mess)
 
 
-def checking_before_adding(what_check: str, what_adding: tk.Entry, person: Person):
+def valid_name(what_check: str, entry: tk.Entry):
+    """Function for checking if valid name"""
+    return what_check == "Name" and entry.get().isalpha()
+
+
+def valid_surname(what_check: str, entry: tk.Entry):
+    """Function for checking if valid surname"""
+    return what_check == "Surname" and entry.get().isalpha()
+
+
+def valid_age(what_check: str, entry: tk.Entry):
+    """Function for checking if valid age"""
+    return what_check == "Age" and entry.get().isdigit() and 120 > int(entry.get()) > 0
+
+
+def valid_number_of_computer(what_check: str, entry: tk.Entry):
+    """Function for checking if valid number of computer"""
+    return what_check == "Num of comp" and entry.get().isdigit()
+
+
+def checking_before_adding(what_check: str, entry: tk.Entry, person: Person):
     """Function for some checking on valid information before adding"""
-    if what_check == "Name":
-        if what_adding.get().isalpha():
-            person.name = what_adding.get()
-            return True
-        else:
-            message("error", "Name must be words from letters!")
-            clearing_entry(what_adding)
-            return False
-    elif what_check == "Surname":
-        if what_adding.get().isalpha():
-            person.surname = what_adding.get()
-            return True
-        else:
-            message("error", "Surname must be words from letters!")
-            clearing_entry(what_adding)
-            return False
-    elif what_check == "Age":
-        if what_adding.get().isdigit():
-            if 120 > int(what_adding.get()) > 0:
-                person.age = int(what_adding.get())
-                return True
-            else:
-                message("error", "Invalid age for person!\nThe age must be from 1 to 120!")
-                clearing_entry(what_adding)
-                return False
-        else:
-            message("error", "The age must be is digit!")
-            clearing_entry(what_adding)
-            return False
-    elif what_check == "Nik name":
-        person.nik = what_adding.get()
+    entry.configure(fg="black")
+
+    if valid_name(what_check, entry):
+        person.name = entry.get()
+    elif valid_surname(what_check, entry):
+        person.surname = entry.get()
+    elif valid_age(what_check, entry):
+        person.age = int(entry.get())
+    elif valid_number_of_computer(what_check, entry):
+        person.num_of_comp = int(entry.get())
     else:
-        if what_adding.get().isdigit():
-            person.num_of_comp = int(what_adding.get())
-            return True
-        else:
-            message("error", "The number of computer must be is digit!")
-            clearing_entry(what_adding)
-            return False
+        message("error", "There is some mistakes!")
+        entry.configure(fg="red")
+        return False
+
+    return True
 
 
 def clearing_entry(entry: tk.Entry):
@@ -240,12 +237,16 @@ def destroy_this_window_and_show_root(window: tk.Toplevel):
     ROOT.deiconify()
 
 
+def there_is_such_person(person: Person, surname: str, name: str):
+    return surname == person.surname and name == person.name
+
+
 def finding_person(element):
     """Function for returning person object which was found"""
     surname, name = LST.get(element).split()
 
     for p in PEOPLE:
-        if surname == p.surname and name == p.name:
+        if there_is_such_person(p, surname, name):
             return p
 
 
